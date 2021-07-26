@@ -4,7 +4,6 @@ from django.contrib.auth import views as authViews
 from . import views as user_views
 
 urlpatterns = [
-    # path('login/', user_views.ClientLoginView.as_view(redirect_authenticated_user=True), name='login'),
     path('logout/', authViews.LogoutView.as_view(), name='logout'),
 
     path('password-change/', authViews.PasswordChangeView.as_view(), name='password_change'),
@@ -16,7 +15,8 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('password-reset/complete/', authViews.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
-    # autre url du module author
+    # autre url du module User
     path('sign-up/', user_views.SignUpView.as_view(), name='signUp'),
+    path('login/', user_views.LoginView.as_view(), name='login'),
 
 ]

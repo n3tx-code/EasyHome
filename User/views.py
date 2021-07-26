@@ -1,20 +1,20 @@
+from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
-from User.form import SignInForm
+from User.form import SignInForm, LoginForm
 
 
 class SignUpView(FormView):
     form_class = SignInForm
-    template_name = "User/signUp.html"
+    template_name = "User/signUp&Login.html"
 
     def form_valid(self, form):
         formData = form.cleaned_data
-        user = User.objects.create_user(username=formData['email'], first_name=formData['first_name'],
+        user = User.objects.create_user(username=formData['username'], first_name=formData['first_name'],
                                         last_name=formData['last_name'], email=formData['email'],
                                         password=formData['password'])
         user.save()
@@ -31,17 +31,21 @@ class SignUpView(FormView):
         return super().dispatch(request)
 
 
-'''class ClientLoginView(LoginView):
-    template_name = "client/login.html"
+class LoginView(FormView):
+    template_name = "User/signUp&Login.html"
+    form_class = LoginForm
+    success_url = '/'
 
-    def get_success_url(self):
-        try:
-            currentClient = Client.objects.get(user=self.request.user)
-        except:
-            return reverse_lazy('logout')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pageTitle'] = "Connexion"
+        return context
 
-        if currentClient:
-            if currentClient.is_premium:
-                return reverse_lazy('offer-choise-after-signIn')
+    def form_valid(self, form):
+        login(self.request, form.get_user())
+        return super().form_valid(form)
 
-        return reverse_lazy('home')'''
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
+        return super().dispatch(request)

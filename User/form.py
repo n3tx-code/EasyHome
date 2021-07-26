@@ -1,6 +1,7 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 
 
@@ -9,7 +10,7 @@ class SignInForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'password')
+        fields = ('username', 'first_name', 'last_name', 'email', 'password')
         labels = {
             'first_name': "Prénom",
             'last_name': "Nom",
@@ -37,5 +38,10 @@ class SignInForm(forms.ModelForm):
         if User.objects.filter(email=cleaned_data.get("email")):
             self.add_error('email', "Email déjà utilisée")
 
-        if User.objects.filter(username=cleaned_data.get("username")):
-            self.add_error('username', "Pseudo déjà utilisé")
+
+class LoginForm(AuthenticationForm):
+
+    def __init__(self, request=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit('submit', "Connexion"))
