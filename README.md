@@ -31,3 +31,6 @@ Create file for the structure of the database
 ### `$ ./manage.py migrate`
 
 Apply migration on the database
+
+### `$ ./manage.py startapp module_name `
+Creation of a module
