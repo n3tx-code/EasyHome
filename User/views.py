@@ -5,7 +5,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
-from User.form import SignInForm, LoginForm
+from User.forms import SignInForm, LoginForm
 
 
 class SignUpView(FormView):
@@ -47,5 +47,5 @@ class LoginView(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('/')
+            return redirect(reverse_lazy('transaction-book'))
         return super().dispatch(request)
