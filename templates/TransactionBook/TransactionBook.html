@@ -2,5 +2,11 @@
 {% load crispy_forms_tags %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-    {{transactionsBook}}
+    <h1>{{ transactionsBook }}</h1>
+    <ul>
+        {% for transaction in transactionsBook.transactions.all %}
+            <li>{{ transaction }}</li>
+        {% endfor %}
+    </ul>
+    <a class="btn btn-primary" href="{% url 'transaction-add' %}">Ajouter une transaction</a>
 {% endblock %}

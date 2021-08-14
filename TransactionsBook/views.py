@@ -19,7 +19,7 @@ class TransactionBookView(LoginRequiredMixin, TemplateView):
             self.transactions_book = TransactionsBook.objects.get(
                 members=self.request.user)  # self.request.user is the user of the session
         except:
-            return redirect(reverse_lazy('transaction-book-create'))
+            return redirect(reverse_lazy('transactions-book-create'))
             # reverse_lazy('<url_name>') generate the path to the url that have the name given in parameter
         return super().dispatch(request)
 
