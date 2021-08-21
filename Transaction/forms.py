@@ -24,8 +24,6 @@ class TransactionCreateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['author'].queryset = self.transactions_book.members.all()
         for member in self.transactions_book.members.all():
-            input_name_participation = 'member_participation_' + str(member.id)
-            self.fields[input_name_participation] = forms.BooleanField(label=member.first_name, required=False)
             input_name_value = 'member_value_' + str(member.id)
             self.fields[input_name_value] = forms.FloatField(min_value=0, required=False,
                                                              initial=0, label=member.first_name)
@@ -40,6 +38,6 @@ class TransactionCreateForm(forms.ModelForm):
             self.add_error('author', "Personne iconnue")
         if cleaned_data.get('particular_sharing'):
             for member in self.transactions_book.members.all():
-                input_name = 'member_' + str(member.id)
+                input_name = 'member_value_' + str(member.id)
                 if cleaned_data.get(input_name) < 0:
                     self.add_error('particular_sharing', "Le partage n'est pas équilibré")

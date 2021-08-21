@@ -9,4 +9,15 @@
         {% endfor %}
     </ul>
     <a class="btn btn-primary" href="{% url 'transaction-add' %}">Ajouter une transaction</a>
+    <div class="row">
+        <h3>Equilibre</h3>
+    </div>
+    <div class="row">
+        {% for member in transactionsBook.balance %}
+            <div class="col">
+                <h5>{{ member.member }}</h5>
+                Total : <strong>{{ member.total }} €</strong>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

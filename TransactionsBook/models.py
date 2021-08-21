@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
-from Transaction.models import Transaction
+from Transaction.models import Transaction, TransactionValue
 
 
 class TransactionsBook(models.Model):
@@ -17,3 +17,20 @@ class TransactionsBook(models.Model):
 
     def __str__(self):
         return self.name
+
+    def balance(self):
+        members = []
+        for member in self.members.all():
+            total = 0
+            for transaction in self.transactions.all():
+                if transaction.author == member:
+                    total -= transaction.total - TransactionValue.objects.get(transaction=transaction,
+                                                                              user=member).value
+                else:
+                    try:
+                        total += TransactionValue.objects.get(transaction=transaction, user=member).value
+                    except:
+                        pass  # member may have been added to the transactions book after the transaction
+
+            members.append({'member': member, 'total': round(total, 2)})
+        return members

@@ -8,7 +8,6 @@ from TransactionsBook.forms import TransactionBookCreateForm
 from TransactionsBook.models import TransactionsBook
 
 
-# TemplateView : mainly for showing data on a html template
 class TransactionBookView(LoginRequiredMixin, TemplateView):
     template_name = 'TransactionBook/TransactionBook.html'
     transactions_book = None

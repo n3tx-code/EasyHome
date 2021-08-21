@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
     {% crispy form %}
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="{% static "js/transactionCreate.js" %}"></script>
 {% endblock %}

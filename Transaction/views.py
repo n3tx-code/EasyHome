@@ -48,8 +48,20 @@ class TransactionAddView(LoginRequiredMixin, FormView):
                     # apply ratio
                     pass
             if form_data['particular_sharing']:
+                total = 0
                 for member in self.transactions_book.members.all():
-                    pass
+                    input_name = 'member_value_' + str(member.id)
+                    transaction_values.append(TransactionValue.objects.create(transaction=transaction, user=member,
+                                                                              value=form_data[input_name]))
+                    total += form_data[input_name]
+                if total == transaction.total:
+                    for transaction_value in transaction_values:
+                        transaction_value.save()
+                else:
+                    messages.add_message(self.request, messages.ERROR,
+                                         "Une erreur est survenue lors de l'enregistrement de votre transaction")
+                    raise ValueError
+
             else:
                 for member in self.transactions_book.members.all():
                     transaction_value = TransactionValue.objects.create(transaction=transaction, user=member,
@@ -61,8 +73,9 @@ class TransactionAddView(LoginRequiredMixin, FormView):
             transaction.delete()
             for transaction_value in transaction_values:
                 transaction_value.delete()
-            messages.add_message(self.request, messages.ERROR,
-                                 "Une erreur est survenue lors de l'enregistrement de votre transaction")
+            if len(messages.get_messages(request=self.request)) == 0:
+                messages.add_message(self.request, messages.ERROR,
+                                     "Une erreur est survenue lors de l'enregistrement de votre transaction")
             self.transactions_book.transactions.remove(transaction)
             self.success_url = reverse_lazy('transaction-add')
         return super().form_valid(form)
