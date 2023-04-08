@@ -1,0 +1,15 @@
+[run]
+source = .
+
+[report]
+fail_under = 80
+show_missing = True
+skip_covered = True
+omit =
+    manage.py
+    EasyHome/asgi.py
+    EasyHome/wsgi.py
+    EasyHome/settings.py
+    */admin.py
+    */apps.py
+
