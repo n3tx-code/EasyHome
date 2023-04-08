@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_bootstrap5',
     'crispy_forms',
+    'ExpenseRecord',
 ]
 
 MIDDLEWARE = [
@@ -104,3 +107,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+LOGIN_URL = reverse_lazy('login')

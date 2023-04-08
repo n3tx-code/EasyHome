@@ -25,10 +25,9 @@ class SignInView(FormView, UnknownUserMixin):
         return super().form_valid(form)
 
 
-class LoginView(FormView):
+class LoginView(UnknownUserMixin, FormView):
     template_name = "User/signUp&Login.html"
     form_class = LoginForm
-    success_url = '/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -39,7 +38,16 @@ class LoginView(FormView):
         login(self.request, form.get_user())
         return super().form_valid(form)
 
+    def get_success_url(self):
+        # check user has an expense record
+        if self.request.user.expense_record.exists():
+            return reverse_lazy('expense_record_check_code')
+        else:
+            return reverse_lazy('expense_record_creation')
+
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('/')
+            return redirect(reverse_lazy('expense_record_detail'))
         return super().dispatch(request)
+
+# todo : mixin that check code in session, other wise redirect to check code

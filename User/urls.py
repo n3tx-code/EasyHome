@@ -1,5 +1,5 @@
-from django.urls import path
 from django.contrib.auth import views as authViews
+from django.urls import path
 
 from . import views as user_views
 
@@ -15,8 +15,7 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('password-reset/complete/', authViews.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
-    # autre url du module User
+    # url from the User module
     path('sign-in/', user_views.SignInView.as_view(), name='signIn'),
     path('login/', user_views.LoginView.as_view(), name='login'),
-
 ]
