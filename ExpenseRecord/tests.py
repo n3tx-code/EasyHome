@@ -43,3 +43,14 @@ class ExpenseRecordTestCase(TestCase):
         # correct code
         self.assertRedirects(self.client.post(reverse_lazy('expense_record_check_code'), {'code': '1234'}), reverse_lazy('expense_record_detail'))
         self.assertEqual(self.client.session['code'], '1234')
+
+    def test_ExpenseRecordMixin(self):
+        self.client.login(username='test', password='test')
+        self.assertRedirects(self.client.get(reverse_lazy('expense_record_detail')), reverse_lazy('expense_record_creation'))
+
+        expense_record = ExpenseRecord.objects.create(name='test')
+        expense_record.users.add(self.user)
+        expense_record.hash_name('1234')
+        expense_record.save()
+
+        self.assertRedirects(self.client.get(reverse_lazy('expense_record_creation')), reverse_lazy('expense_record_detail'))

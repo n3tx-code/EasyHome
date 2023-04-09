@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -7,10 +6,11 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 
 from ExpenseRecord.forms import ExpenseRecordCreationForm, ExpenseRecordCodeCheckForm
+from ExpenseRecord.mixins import ExpenseRecordMixin
 from ExpenseRecord.models import ExpenseRecord
 
 
-class ExpenseRecordCreationView(LoginRequiredMixin, FormView):
+class ExpenseRecordCreationView(ExpenseRecordMixin, FormView):
     '''
         This view is used to create a new expense record. It's only accessible if the user is connected and if he doesn't already have an expense record.
     '''
@@ -33,23 +33,14 @@ class ExpenseRecordCreationView(LoginRequiredMixin, FormView):
     def get_success_url(self):
         return reverse_lazy('expense_record_detail')
 
-    def dispatch(self, request, *args, **kwargs):
-        super_result = super().dispatch(request, *args, **kwargs)
-        if super_result.status_code == 200:
-            if request.user.expense_record.exists():
-                return redirect(reverse_lazy('expense_record_detail'))
-        return super_result
 
-
-class ExpenseRecordCheckCodeView(LoginRequiredMixin, FormView):
+class ExpenseRecordCheckCodeView(ExpenseRecordMixin, FormView):
     '''
         This view is used to check the code of the expense record. It's only accessible if the user is connected and if he already have an expense record.
     '''
     template_name = 'ExpenseRecord/CheckCode.html'
     form_class = ExpenseRecordCodeCheckForm
     success_url = reverse_lazy('expense_record_check_code')  # would be change if the code is valid
-
-    # todo : dispatch redirct to expense record creation if no expense record
 
     def form_valid(self, form):
         code = self.request.POST['code']
@@ -61,8 +52,7 @@ class ExpenseRecordCheckCodeView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-class ExpenseRecordDetailView(LoginRequiredMixin, TemplateView):
-    # todo : expense record mixin
+class ExpenseRecordDetailView(ExpenseRecordMixin, TemplateView):
     template_name = 'ExpenseRecord/Detail.html'
 
     def get_context_data(self, **kwargs):
