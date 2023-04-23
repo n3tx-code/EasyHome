@@ -21,7 +21,7 @@ class ExpenseRecordCreationView(ExpenseRecordMixin, FormView):
     def form_valid(self, form):
         form.save()
         form.instance.users.add(self.request.user)
-        form.instance.hash_name(form.data['code'])
+        form.instance.hash_string(form.data['code'], )
         self.expense_record = form.instance
         return super().form_valid(form)
 
