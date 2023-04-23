@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
+{% load decrypt_string %}
 {% block content %}
     <h1>Detail expense record</h1>
+    <a href="{% url 'expense_creation' %}">Ajouter une dépense</a>
+    <ul>
+        {% for expense in expense_record.expenses.all %}
+            <li>{{ expense.name|decrypt_string:request.session.code }} - {{ expense.amount|decrypt_string:request.session.code }}€</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

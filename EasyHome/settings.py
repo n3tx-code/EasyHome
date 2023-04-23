@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'crispy_forms',
     'ExpenseRecord',
+    'Expense',
 ]
 
 MIDDLEWARE = [
