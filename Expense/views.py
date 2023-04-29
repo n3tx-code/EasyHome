@@ -1,11 +1,13 @@
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import FormView
+from django.views.generic import FormView, DetailView
 
 from Expense.forms import ExpenseCreationForm
+from Expense.mixins import ExpenseMixin
+from Expense.models import Expense
 from ExpenseRecord.mixins import ExpenseRecordMixin
-from ExpenseRecord.utils import hash_string
+from ExpenseRecord.utils import hash_string, decrypt_string
 
 
 class ExpenseCreationView(ExpenseRecordMixin, FormView):
@@ -25,3 +27,13 @@ class ExpenseCreationView(ExpenseRecordMixin, FormView):
         kwargs = super().get_form_kwargs()
         kwargs['expense-record'] = self.request.user.expense_record.get()
         return kwargs
+
+
+class ExpenseDetailView(ExpenseMixin, DetailView):
+    template_name = 'Expense/Detail.html'
+    model = Expense
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = _('Détail de la dépense : {}').format(decrypt_string(self.object.name, self.request.session['code']))
+        return context

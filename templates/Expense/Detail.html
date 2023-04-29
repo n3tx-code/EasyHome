@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% load decrypt_string %}
+{% block content %}
+    {{ expense.name|decrypt_string:request.session.code }} - {{ expense.amount|decrypt_string:request.session.code }}€
+{% endblock %}
